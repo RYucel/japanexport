@@ -1,0 +1,8 @@
+{
+  "maxPriceGbp": 25000,
+  "models": [],
+  "topN": 5,
+  "minGapPct": 5,
+  "header": "🚗 KKTC Araç Avcısı",
+  "footer": "Tüm liste ve maliyet dökümü:"
+}

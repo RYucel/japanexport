@@ -13,16 +13,17 @@
   },
   "shipping": {
     "port": "FAMAGUSTA",
-    "method": "roro",
-    "freightUsd": {
+    "method": "container",
+    "roroUsd": {
       "FAMAGUSTA": 1350,
       "MERSIN": 1250,
       "ISKENDERUN": 1300
     },
-    "containerUsd": {
-      "FAMAGUSTA": 2600,
-      "MERSIN": 2450,
-      "ISKENDERUN": 2500
+    "containerUsd": 11000,
+    "carsPerContainer": {
+      "suv": 4,
+      "otomobil": 5,
+      "ticari": 3
     },
     "insuranceRate": 0.015
   },
@@ -40,7 +41,7 @@
     "mode": "sea"
   },
   "ui": {
-    "defaultBudgetGbp": 0,
+    "defaultBudgetGbp": 25000,
     "dealThreshold": 0.08,
     "port": 3000
   }

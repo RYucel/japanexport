@@ -33,11 +33,26 @@ export function registrationDate(car) {
  * @param {object} opts { port, method, freightUsd, commissionGbp, insuranceRate,
  *                        importer, arrivalDays, maxAgeMonths, origin, vehicleType, mode, registrationTry }
  */
+/**
+ * Araç başına navlun (USD).
+ *  · method 'container': konteyner ücreti / konteynere sığan araç sayısı (paylaşımlı)
+ *  · method 'roro': limana göre araç başı RORO ücreti
+ *  · freightUsd verilmişse (kullanıcı elle girdiyse) o kullanılır.
+ */
+export function freightFor(opts = {}, vehicleType = 'suv') {
+  if (opts.freightUsd != null && opts.freightUsd !== '') return Number(opts.freightUsd);
+
+  if (opts.method === 'container') {
+    const seats = Number(opts.carsPerContainer?.[vehicleType] || 4);
+    return Number(opts.containerUsd ?? 11000) / seats;
+  }
+  return Number(opts.roroUsd?.[opts.port] ?? opts.freightUsdByPort?.[opts.port] ?? 1350);
+}
+
 export function computeLanded(car, fx, opts = {}) {
   const {
     port = 'FAMAGUSTA',
-    method = 'roro',
-    freightUsd,
+    method = 'container',
     commissionGbp = 2000,
     insuranceRate = 0.015,
     importer = 'sahis',
@@ -54,12 +69,7 @@ export function computeLanded(car, fx, opts = {}) {
   const fobTry = (car.priceAmount || 0) * toTry(fx);
   const fobGbp = fobTry / fx.gbpTry;
 
-  const freight =
-    freightUsd != null
-      ? Number(freightUsd)
-      : method === 'container'
-        ? (opts.containerUsdByPort?.[port] ?? 0)
-        : (opts.freightUsdByPort?.[port] ?? 0);
+  const freight = freightFor(opts, vehicleType);
   const freightTry = freight * fx.usdTry;
 
   const insuranceTry = fobTry * insuranceRate;

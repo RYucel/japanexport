@@ -90,7 +90,7 @@ for (const key of keys) {
       medianLandedGbp: Math.round(view.summary.medianLandedGbp || 0),
       top: view.cars
         .filter((c) => c.eligible)
-        .slice(0, 1)
+        .slice(0, 12)
         .map((c) => ({
           ym: `${c.regYear}/${String(c.regMonth || 1).padStart(2, '0')}`,
           grade: (c.grade || '').replace(/^\d{4}(?:\/\d{1,2})?\s+/, '').trim(),

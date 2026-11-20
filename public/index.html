@@ -125,7 +125,14 @@
           </select>
         </label>
         <label class="ctrl">
-          <span>Navlun (USD)</span>
+          <span>Yöntem</span>
+          <select id="cMethod">
+            <option value="container">Konteyner (paylaşımlı)</option>
+            <option value="roro">RORO (araç başı)</option>
+          </select>
+        </label>
+        <label class="ctrl">
+          <span>Navlun (USD / araç)</span>
           <input id="cFreight" type="number" min="0" step="50" inputmode="numeric">
         </label>
         <label class="ctrl">
@@ -145,9 +152,8 @@
         </label>
         <button class="btn primary sm" id="applyCost" type="button">Uygula</button>
       </div>
-      <p class="adv-note">
-        Navlun SBT’nin ilan başına verdiği teklifle değişir; buradaki değer tahmini RORO ücretidir.
-        Sigorta otomatik %1,5. Gümrük vergileri CIF üzerinden hesaplanır.
+      <p class="adv-note" id="freightHint">
+        Konteyner paylaşımlı: 40' konteyner ücreti ÷ araç sayısı. Sigorta otomatik %1,5; gümrük vergileri CIF üzerinden hesaplanır.
       </p>
     </details>
   </section>

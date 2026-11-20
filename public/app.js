@@ -21,6 +21,7 @@ const state = {
   model: null,
   models: [],
   costInit: false,
+  budgetInit: false,
   costOverrides: {},
   filters: { budget: 0, year: 0, km: 0, fuel: '', drive: '', source: '', sort: 'score', eligible: true },
   limit: 48
@@ -123,6 +124,32 @@ async function load({ refresh = false } = {}) {
   }
 }
 
+function autoFreight(method) {
+  const meta = state.raw.meta;
+  const s = meta.defaults.shipping;
+  const vt = meta.vehicleType || 'suv';
+  if (method === 'container') {
+    const seats = s.carsPerContainer?.[vt] || 4;
+    return Math.round((s.containerUsd || 11000) / seats);
+  }
+  const port = $('cPort').value || s.port;
+  return Math.round(s.roroUsd?.[port] ?? 1350);
+}
+
+function syncFreight() {
+  const method = $('cMethod').value;
+  const f = autoFreight(method);
+  $('cFreight').value = f;
+
+  const s = state.raw.meta.defaults.shipping;
+  const vt = state.raw.meta.vehicleType || 'suv';
+  const hint =
+    method === 'container'
+      ? `Konteyner $${nf.format(s.containerUsd || 11000)} ÷ ${s.carsPerContainer?.[vt] || 4} araç = $${nf.format(f)}/araç.`
+      : `RORO ${$('cPort').value} = $${nf.format(f)}/araç.`;
+  $('freightHint').textContent = `${hint} Sigorta %1,5; vergiler CIF üzerinden hesaplanır.`;
+}
+
 function applyMeta(meta) {
   $('fxGbp').textContent = nf1.format(meta.fx.gbpTry);
   $('fxJpy').textContent = (meta.fx.jpyTry * 100).toFixed(2).replace('.', ',');
@@ -140,11 +167,21 @@ function applyMeta(meta) {
   if (!state.costInit) {
     const o = meta.opts;
     $('cPort').value = o.port;
-    $('cFreight').value = o.freightUsd;
+    $('cMethod').value = o.method || 'container';
     $('cCommission').value = o.commissionGbp;
     $('cImporter').value = o.importer;
     $('cArrival').value = o.arrivalDays;
+    syncFreight();
     state.costInit = true;
+  }
+
+  if (!state.budgetInit) {
+    const b = meta.defaults?.ui?.defaultBudgetGbp || 0;
+    if (b > 0) {
+      state.filters.budget = b;
+      $('fBudget').value = b;
+    }
+    state.budgetInit = true;
   }
 
   const years = [...new Set(state.cars.map((c) => c.regYear).filter(Boolean))].sort((a, b) => b - a);
@@ -370,9 +407,15 @@ $('fEligible').addEventListener('change', (e) => {
   resetAndRender();
 });
 
+$('cMethod').addEventListener('change', syncFreight);
+$('cPort').addEventListener('change', () => {
+  if ($('cMethod').value === 'roro') syncFreight();
+});
+
 $('applyCost').addEventListener('click', () => {
   state.costOverrides = {
     port: $('cPort').value,
+    method: $('cMethod').value,
     freightUsd: Number($('cFreight').value) || 0,
     commissionGbp: Number($('cCommission').value) || 0,
     importer: $('cImporter').value,

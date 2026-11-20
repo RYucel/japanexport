@@ -63,19 +63,31 @@ async function telegramSetup() {
   for (const [id, name] of chats) console.log(`TELEGRAM_CHAT_ID=${id}   (${name})`);
 }
 
-function buildMessage(index) {
+function buildMessage(index, prefs) {
   const models = index.models || [];
-  const deals = models
-    .flatMap((m) => (m.top || []).map((t) => ({ ...t, model: m.label })))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
+  const wanted = new Set(prefs.models || []);
+
+  let deals = models
+    .filter((m) => !wanted.size || wanted.has(m.key))
+    .flatMap((m) => (m.top || []).map((t) => ({ ...t, model: m.label })));
+
+  if (prefs.maxPriceGbp > 0) deals = deals.filter((d) => d.totalGbp <= prefs.maxPriceGbp);
+  if (prefs.minGapPct > 0) deals = deals.filter((d) => d.gap >= prefs.minGapPct);
+
+  deals = deals.sort((a, b) => b.score - a.score).slice(0, prefs.topN || 5);
 
   const total = models.reduce((a, m) => a + (m.total || 0), 0);
   const eligible = models.reduce((a, m) => a + (m.eligible || 0), 0);
 
   const lines = [];
-  lines.push(`🚗 KKTC Araç Avcısı · ${trDate(new Date(index.updatedAt || Date.now()))}`);
+  lines.push(`${prefs.header || '🚗 KKTC Araç Avcısı'} · ${trDate(new Date(index.updatedAt || Date.now()))}`);
   lines.push(`${models.length} model · ${nf.format(total)} ilan tarandı, ${nf.format(eligible)} tanesi 5 yaşa uygun.`);
+
+  const budgetTxt =
+    prefs.maxPriceGbp > 0
+      ? `Bütçe: en fazla £${nf.format(prefs.maxPriceGbp)} gümrüklü.`
+      : '';
+  if (budgetTxt) lines.push(budgetTxt);
   lines.push('');
 
   if (deals.length) {
@@ -89,13 +101,27 @@ function buildMessage(index) {
     });
     lines.push('');
   } else {
-    lines.push('Bugün uygun ilan bulunamadı.');
+    lines.push(
+      prefs.maxPriceGbp > 0
+        ? `Bugün £${nf.format(prefs.maxPriceGbp)} altında uygun fırsat yok.`
+        : 'Bugün uygun ilan bulunamadı.'
+    );
     lines.push('');
   }
 
-  lines.push('Tüm liste ve maliyet dökümü:');
+  lines.push(prefs.footer || 'Tüm liste ve maliyet dökümü:');
   lines.push(SITE_URL);
   return lines.join('\n');
+}
+
+async function loadPrefs() {
+  const defaults = { maxPriceGbp: 0, models: [], topN: 5, minGapPct: 0, header: '🚗 KKTC Araç Avcısı', footer: 'Tüm liste ve maliyet dökümü:' };
+  try {
+    const raw = JSON.parse(await readFile(path.resolve('notify.json'), 'utf8'));
+    return { ...defaults, ...raw };
+  } catch {
+    return defaults;
+  }
 }
 
 async function sendTelegram(text) {
@@ -132,7 +158,8 @@ async function main() {
     return;
   }
 
-  const text = buildMessage(index);
+  const prefs = await loadPrefs();
+  const text = buildMessage(index, prefs);
 
   if (dryRun) {
     console.log('\n--- MESAJ ---\n' + text + '\n--- /MESAJ ---\n');

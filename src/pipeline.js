@@ -3,7 +3,7 @@ import path from 'node:path';
 import { scan as sbtScan } from './sbt.js';
 import { scan as goonetScan } from './goonet.js';
 import { getFx } from './fx.js';
-import { computeLanded } from '../public/lib/landed.js';
+import { computeLanded, freightFor } from '../public/lib/landed.js';
 import { buildMarket, scoreCar, summarize } from '../public/lib/score.js';
 import { loadState, saveState, saveSnapshot, applyScan, recordScan, today } from './store.js';
 
@@ -84,30 +84,35 @@ export async function getRawScan(cfg, { refresh = false, onProgress, cacheKey = 
 
 export function resolveOptions(cfg, params = {}) {
   const port = params.port || cfg.shipping.port;
-  const method = params.method || cfg.shipping.method;
+  const method = params.method || cfg.shipping.method || 'container';
+  const vehicleType = cfg.customs.vehicleType;
   const commissionGbp = params.commission != null ? Number(params.commission) : cfg.fees.commissionGbp;
+
+  const roroUsd = cfg.shipping.roroUsd || cfg.shipping.freightUsd || {};
+  const containerUsd = cfg.shipping.containerUsd ?? 11000;
+  const carsPerContainer = cfg.shipping.carsPerContainer || { suv: 4, otomobil: 5, ticari: 3 };
+
   const freightUsd =
     params.freight != null && params.freight !== ''
       ? Number(params.freight)
-      : method === 'container'
-        ? cfg.shipping.containerUsd[port]
-        : cfg.shipping.freightUsd[port];
+      : freightFor({ method, port, roroUsd, containerUsd, carsPerContainer }, vehicleType);
 
   return {
     port,
     method,
     commissionGbp,
     freightUsd,
+    roroUsd,
+    containerUsd,
+    carsPerContainer,
     insuranceRate: cfg.shipping.insuranceRate,
     importer: params.importer || cfg.customs.importerType,
     arrivalDays: params.arrivalDays != null ? Number(params.arrivalDays) : cfg.customs.arrivalDays,
     maxAgeMonths: params.maxAgeMonths != null ? Number(params.maxAgeMonths) : cfg.customs.maxAgeMonths,
     origin: cfg.customs.origin,
-    vehicleType: cfg.customs.vehicleType,
+    vehicleType,
     mode: cfg.customs.mode,
-    registrationTry: cfg.fees.kktcRegistrationTry,
-    freightUsdByPort: cfg.shipping.freightUsd,
-    containerUsdByPort: cfg.shipping.containerUsd
+    registrationTry: cfg.fees.kktcRegistrationTry
   };
 }
 

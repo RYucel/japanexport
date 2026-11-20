@@ -98,9 +98,22 @@ Panelde **Kaynak** filtresiyle yalnızca birini görebilirsiniz.
 ## Hesaplama modeli
 
 ### 1. CIF
+
 ```
 FOB (¥ → ₺)  +  Navlun (USD → ₺)  +  Sigorta (%1,5 × FOB)  =  CIF
 ```
+
+**Navlun iki şekilde hesaplanır** (`config.json → shipping.method`):
+
+| Yöntem | Formül | Örnek |
+|---|---|---|
+| `container` (varsayılan) | Konteyner ücreti ÷ konteynere sığan araç | $11.000 ÷ 4 SUV = **$2.750/araç** · ÷ 5 sedan = $2.200 · ÷ 3 pickup = $3.667 |
+| `roro` | Limana göre araç başı sabit | Gazimağusa $1.350 |
+
+> 40' konteynere kabaca 4 SUV veya 5 sedan sığar (paylaşımlı yükleme). Bu sayılar
+> `carsPerContainer` ile araç tipine göre ayarlanır; panelde “Yöntem” seçicisiyle
+> RORO'ya geçip karşılaştırma yapabilirsiniz.
+> Piyasa referansı (2026): paylaşımlı 40' HC ≈ $2.000–3.000/araç, dedicated ≈ $3.800–5.400 + liman/varış masrafları.
 
 ### 2. KKTC vergileri (CIF üzerinden)
 
@@ -247,6 +260,37 @@ npm run build # public/ altına statik site üret
 
 ---
 
+## Bildirim özelleştirme (`notify.json`)
+
+Telegram ve WhatsApp mesajları bu dosyadan ayarlanır:
+
+```json
+{
+  "maxPriceGbp": 25000,
+  "models": [],
+  "topN": 5,
+  "minGapPct": 5,
+  "header": "🚗 KKTC Araç Avcısı",
+  "footer": "Tüm liste ve maliyet dökümü:"
+}
+```
+
+| Alan | Anlamı |
+|---|---|
+| `maxPriceGbp` | **Üst bütçe** (gümrüklü £). `0` = sınırsız. Ör. 25000 → sadece £25.000 altı fırsatlar |
+| `models` | Yalnızca bu modeller (ör. `["rav4","corolla"]`). Boş dizi = tümü |
+| `topN` | Mesajda kaç fırsat gösterilecek |
+| `minGapPct` | En az piyasa farkı (%). `5` → “piyasanın en az %5 altında” |
+| `header` / `footer` | Mesaj başlığı ve kapanış satırı |
+
+Değişiklikten sonra bir sonraki günlük çalıştırma yeni ayarları kullanır.
+Yerelde denemek için: `node src/notify.js --dry-run`
+
+> Paneldeki varsayılan bütçe filtresi `config.json → ui.defaultBudgetGbp` ile gelir
+> (şu an 25.000 £). Boş bırakmak için `0` yapın.
+
+---
+
 ## Telegram bildirimi (ücretsiz, en güvenilir)
 
 WhatsApp'a alternatif olarak aynı özet Telegram'a gönderilebilir. Kurulum ~2 dakika:
@@ -343,7 +387,10 @@ Notlar:
 | `sources.goonet.enabled` | Goo-net Exchange taransın mı |
 | `sources.goonet.maxPages` | Goo-net sayfa sınırı (20 ilan/sayfa, varsayılan 35) |
 | `shipping.port` | `FAMAGUSTA` · `MERSIN` · `ISKENDERUN` |
-| `shipping.freightUsd` | Liman başına **tahmini** RORO navlunu (USD) |
+| `shipping.method` | `container` (paylaşımlı, varsayılan) veya `roro` |
+| `shipping.containerUsd` | Konteyner toplam ücreti (varsayılan $11.000) |
+| `shipping.carsPerContainer` | Araç tipine göre konteynere sığan adet (`suv:4, otomobil:5, ticari:3`) |
+| `shipping.roroUsd` | Liman başına araç başı RORO ücreti (USD) |
 | `shipping.insuranceRate` | Sigorta oranı (SBT örneğinde ~%1,53 → %1,5 kullanılıyor) |
 | `fees.commissionGbp` | Galeri/aracılık komisyonu (varsayılan £2.000) |
 | `fees.kktcRegistrationTry` | Tescil/plaka masrafı (varsayılan 0) |
