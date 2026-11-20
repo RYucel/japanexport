@@ -33,7 +33,7 @@
     "dealerGbp": 0
   },
   "customs": {
-    "importerType": "sahis",
+    "importerType": "galeri",
     "arrivalDays": 90,
     "maxAgeMonths": 60,
     "origin": "japonya",

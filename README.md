@@ -130,7 +130,7 @@ FOB (¥ → ₺)  +  Navlun (USD → ₺)  +  Sigorta (%1,5 × FOB)  =  CIF
 | Gümrük Vergisi | **%10** (Japonya menşeli binek/SUV) |
 | Fiyat İstikrar Fonu (FİF) | **%3** ≤2000cc · **%8** 2001–3000cc · **%12** >3000cc |
 | Özel Fon | **%15** (şahıs ithalatı) |
-| Stopaj | **%4** (galeri/bayi ithalatı — özel fon yerine) |
+| Stopaj | **%4** (satıcı/galeri ithalatı — özel fon yerine, **varsayılan**) |
 | Rıhtım Harcı | **%4,4** (deniz yolu; Ercan'da muaf) |
 | GKK | **%2,5** |
 | Bandrol | **%0,3 + 50 ₺** |
@@ -144,16 +144,20 @@ FOB (¥ → ₺)  +  Navlun (USD → ₺)  +  Sigorta (%1,5 × FOB)  =  CIF
 KKTC toplam = CIF + tüm vergiler + galeri komisyonu (£2.000) + (varsa) tescil/plaka
 ```
 
-**Örnek (2024 RAV4, 2.0 benzin, ¥2.431.000):**
+**Örnek (2024 RAV4, 2.0 benzin, ¥2.431.000, satıcı/galeri ithalatı):**
 
 | | |
 |---|---|
 | FOB | £11.573 |
-| Navlun + sigorta | £1.198 |
-| CIF | £12.771 |
-| Vergiler (toplam) | £7.951 |
+| Navlun (konteyner paylaşımlı) + sigorta | £2.261 |
+| CIF | £13.834 |
+| Vergiler (toplam, %48,2) | £6.674 |
 | Komisyon | £2.000 |
-| **KKTC gümrüklü** | **£22.721** |
+| **KKTC gümrüklü** | **£22.508** |
+
+Aynı araç **şahıs ithalatında** %15 özel fon nedeniyle **£24.445** olur (+£1.937).
+Galerici aracılığıyla getiriliyorsa “Satıcı/galeri” seçilmelidir; Neveser’in sitesindeki
+“Satıcı” seçeneğiyle aynı hesaptır.
 
 ---
 
@@ -499,7 +503,7 @@ Notlar:
 | `shipping.insuranceRate` | Sigorta oranı (SBT örneğinde ~%1,53 → %1,5 kullanılıyor) |
 | `fees.commissionGbp` | Galeri/aracılık komisyonu (varsayılan £2.000) |
 | `fees.kktcRegistrationTry` | Tescil/plaka masrafı (varsayılan 0) |
-| `customs.importerType` | `sahis` (+%15 özel fon) veya `galeri` (+%4 stopaj) |
+| `customs.importerType` | `galeri` (satıcı ruhsatı, %4 stopaj — varsayılan) veya `sahis` (%15 özel fon) |
 | `customs.arrivalDays` | Tahmini varış süresi (5 yaş hesabı için) |
 
 > **Navlun** ilan/ölçü/liman ve sezona göre değişir. En doğrusu: SBT'nin ilan sayfasındaki

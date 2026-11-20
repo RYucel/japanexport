@@ -252,7 +252,7 @@ function updateStats(cars) {
   const srcTxt = Object.entries(src)
     .map(([k, v]) => `${SOURCE_LABEL[k] || k} ${v}`)
     .join(' · ');
-  $('listMeta').textContent = `${srcTxt} · gümrüklü fiyatlar ${state.opts.importer === 'galeri' ? 'galeri' : 'şahıs'} ithalatına göre · ${state.opts.port}`;
+  $('listMeta').textContent = `${srcTxt} · gümrüklü fiyatlar ${state.opts.importer === 'galeri' ? 'satıcı/galeri' : 'şahıs'} ithalatına göre · ${state.opts.port}`;
 
   const noteEl = $('modelNote');
   const parts = [];

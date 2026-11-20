@@ -55,7 +55,7 @@ export function buildReport({ date, cars, summary, gone, fx, opts }) {
   lines.push(`- 5 yaş kuralına uyan: **${summary.eligible}**`);
   lines.push(`- Uygun araçların medyan gümrüklü fiyatı: **${gbp(summary.medianLandedGbp)}** (en düşük ${gbp(summary.minLandedGbp)}, en yüksek ${gbp(summary.maxLandedGbp)})`);
   lines.push(`- Ortalama vergi yükü (CIF üzerine): **${pct(summary.medianTaxRate)}**`);
-  lines.push(`- Varsayımlar: navlun ${opts.method === 'container' ? 'konteyner' : 'RORO'} ${opts.port} ${opts.freightUsd} $, sigorta ${pct(opts.insuranceRate)}, komisyon ${gbp(opts.commissionGbp)}, ithalatçı: ${opts.importer === 'galeri' ? 'galeri/bayi' : 'şahıs'}, varış ${opts.arrivalDays} gün.`);
+  lines.push(`- Varsayımlar: navlun ${opts.method === 'container' ? 'konteyner (paylaşımlı)' : 'RORO'} ${opts.port} ${Math.round(opts.freightUsd)} $/araç, sigorta ${pct(opts.insuranceRate)}, komisyon ${gbp(opts.commissionGbp)}, ithalatçı: ${opts.importer === 'galeri' ? 'satıcı/galeri (%4 stopaj)' : 'şahıs (%15 özel fon)'}, varış ${opts.arrivalDays} gün.`);
   lines.push('');
 
   lines.push('## Bugünün en iyi fırsatları');
