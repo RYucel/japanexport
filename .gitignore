@@ -8,3 +8,6 @@ public/data/
 public/reports/
 *.log
 .DS_Store
+
+/gn_*.html
+/sbt_*.html
