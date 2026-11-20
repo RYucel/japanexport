@@ -329,7 +329,33 @@ node src/notify.js --telegram-setup
 
 ---
 
-## WhatsApp bildirimi (ücretsiz)
+## WhatsApp bildirimi (TextMeFlow — ücretsiz plan 50 mesaj/ay)
+
+[TextMeFlow](https://textmeflow.eu) **kendi WhatsApp numaranızı** API'ye bağlar
+(QR ile eşleştirme). Ücretsiz plan **ayda 50 mesaj** verir — günde 1 özet = ayda ~30.
+
+1. https://textmeflow.eu/en/signup?plan=free → ücretsiz planla kayıt olun.
+2. Panelden WhatsApp'ı **QR ile eşleştirin** (Telefon → Bağlı cihazlar gibi).
+3. **API key**'i kopyalayın.
+4. Secret'ları ekleyin:
+
+```powershell
+gh secret set TEXTMEFLOW_APIKEY --body "KEY"
+gh secret set TEXTMEFLOW_TO     --body "+90533xxxxxxx"
+gh variable set NOTIFY_PROVIDER --body "textmeflow"
+```
+
+5. Test: **Actions → Run workflow**.
+
+Gönderim `POST https://api.textmeflow.eu/v1/messages` (Bearer) ile yapılır;
+`send.php` (TextMeBot uyumlu) uç noktası da mevcuttur.
+
+> Not: Eşleştirilen oturum düşerse mesaj gitmez; panelden yeniden bağlamak gerekir.
+> Telegram halen en güvenilir kanal — WhatsApp'ı ikinci kanal olarak açık tutabilirsiniz.
+
+---
+
+## WhatsApp bildirimi (CallMeBot, alternatif)
 
 Her günün özeti (en iyi 5 fırsat + gümrüklü fiyatlar + site linki) WhatsApp'a gönderilir.
 [CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/) kullanılır — kişisel

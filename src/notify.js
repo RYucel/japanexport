@@ -3,15 +3,24 @@
  * Günlük özeti WhatsApp (CallMeBot) veya Telegram'a gönderir.
  *
  * Sağlayıcı seçimi:
- *   NOTIFY_PROVIDER=telegram | callmebot   (boşsa: Telegram token varsa telegram, yoksa callmebot)
+ *   NOTIFY_PROVIDER=telegram | textmeflow | callmebot | webhook
+ *   (boşsa: Telegram token varsa telegram, TextMeFlow anahtarı varsa textmeflow,
+ *    CallMeBot anahtarı varsa callmebot)
  *
  * Telegram:
  *   TELEGRAM_TOKEN    @BotFather'dan alınan token
  *   TELEGRAM_CHAT_ID  size ait chat id (--telegram-setup ile bulunur)
  *
+ * TextMeFlow (WhatsApp, ücretsiz plan 50 mesaj/ay):
+ *   TEXTMEFLOW_APIKEY  panelden alınan anahtar
+ *   TEXTMEFLOW_TO      alıcı numara (+90533...), boşsa WHATSAPP_PHONE
+ *
  * CallMeBot (WhatsApp):
  *   WHATSAPP_PHONE    +90533xxxxxxx
  *   WHATSAPP_APIKEY   CallMeBot anahtarı
+ *
+ * Genel webhook (ntfy, Make, Zapier...):
+ *   NOTIFY_WEBHOOK_URL  POST {"text": "..."} alan adres
  *
  * Kullanım:
  *   node src/notify.js                  # gönderir
@@ -30,9 +39,13 @@ const TG_TOKEN = process.env.TELEGRAM_TOKEN;
 const TG_CHAT = process.env.TELEGRAM_CHAT_ID;
 const WA_PHONE = process.env.WHATSAPP_PHONE;
 const WA_KEY = process.env.WHATSAPP_APIKEY;
+const TMF_KEY = process.env.TEXTMEFLOW_APIKEY;
+const TMF_TO = process.env.TEXTMEFLOW_TO || process.env.WHATSAPP_PHONE;
+const WEBHOOK_URL = process.env.NOTIFY_WEBHOOK_URL;
 
 const provider =
-  process.env.NOTIFY_PROVIDER || (TG_TOKEN ? 'telegram' : WA_KEY ? 'callmebot' : 'none');
+  process.env.NOTIFY_PROVIDER ||
+  (TG_TOKEN ? 'telegram' : TMF_KEY ? 'textmeflow' : WA_KEY ? 'callmebot' : WEBHOOK_URL ? 'webhook' : 'none');
 
 const nf = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
 const fmtPct = (n) => String(n).replace('.', ',');
@@ -147,6 +160,32 @@ async function sendWhatsApp(text) {
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${body}`);
 }
 
+async function sendTextMeFlow(text) {
+  if (!TMF_KEY || !TMF_TO) throw new Error('TEXTMEFLOW_APIKEY / TEXTMEFLOW_TO eksik');
+  const res = await fetch('https://api.textmeflow.eu/v1/messages', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${TMF_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ to: TMF_TO, text }),
+    signal: AbortSignal.timeout(25000)
+  });
+  const body = (await res.text()).trim();
+  if (res.status === 202 || res.ok) return;
+  throw new Error(`HTTP ${res.status}: ${body.replace(/\s+/g, ' ').slice(0, 160)}`);
+}
+
+async function sendWebhook(text) {
+  const res = await fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+    signal: AbortSignal.timeout(20000)
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+}
+
 async function main() {
   if (tgSetup) return telegramSetup();
 
@@ -183,14 +222,38 @@ async function main() {
     }
     try {
       await sendWhatsApp(text);
-      console.log('✅  WhatsApp bildirimi gönderildi.');
+      console.log('✅  WhatsApp bildirimi gönderildi (CallMeBot).');
     } catch (err) {
       console.warn(`⚠️  WhatsApp gönderilemedi: ${err.message}`);
     }
     return;
   }
 
-  console.log('ℹ️  Bildirim sağlayıcısı tanımlı değil (TELEGRAM_TOKEN veya WHATSAPP_APIKEY).');
+  if (provider === 'textmeflow') {
+    if (!TMF_KEY || !TMF_TO) {
+      console.log('ℹ️  TEXTMEFLOW_APIKEY / TEXTMEFLOW_TO tanımlı değil — bildirim atlandı.');
+      return;
+    }
+    try {
+      await sendTextMeFlow(text);
+      console.log('✅  WhatsApp bildirimi gönderildi (TextMeFlow).');
+    } catch (err) {
+      console.warn(`⚠️  TextMeFlow gönderilemedi: ${err.message}`);
+    }
+    return;
+  }
+
+  if (provider === 'webhook') {
+    try {
+      await sendWebhook(text);
+      console.log('✅  Webhook bildirimi gönderildi.');
+    } catch (err) {
+      console.warn(`⚠️  Webhook gönderilemedi: ${err.message}`);
+    }
+    return;
+  }
+
+  console.log('ℹ️  Bildirim sağlayıcısı tanımlı değil (TELEGRAM_TOKEN, TEXTMEFLOW_APIKEY veya WHATSAPP_APIKEY).');
 }
 
 main();

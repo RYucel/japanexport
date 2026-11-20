@@ -86,7 +86,10 @@ jobs:
           NOTIFY_PROVIDER: ${{ vars.NOTIFY_PROVIDER }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TEXTMEFLOW_APIKEY: ${{ secrets.TEXTMEFLOW_APIKEY }}
+          TEXTMEFLOW_TO: ${{ secrets.TEXTMEFLOW_TO }}
           WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
           WHATSAPP_APIKEY: ${{ secrets.WHATSAPP_APIKEY }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
           SITE_URL: ${{ steps.deployment.outputs.page_url }}
         run: node src/notify.js
