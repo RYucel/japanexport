@@ -3,7 +3,9 @@
     {
       "name": "RAV4 · 25 bin £ altı",
       "enabled": true,
-      "models": ["rav4"],
+      "models": [
+        "rav4"
+      ],
       "maxPriceGbp": 25000,
       "maxKm": 80000,
       "minYear": 2022,
@@ -13,11 +15,28 @@
     {
       "name": "SUV · 18 bin £ altı",
       "enabled": false,
-      "models": ["yaris-cross", "corolla-cross", "chr", "vezel", "jimny", "cx30"],
+      "models": [
+        "yaris-cross",
+        "corolla-cross",
+        "chr",
+        "vezel",
+        "jimny",
+        "cx30"
+      ],
       "maxPriceGbp": 18000,
       "maxKm": 90000,
       "minYear": 2022,
       "minGapPct": 8,
+      "topN": 3
+    },
+    {
+      "name": "RAV4",
+      "enabled": true,
+      "models": [
+        "rav4"
+      ],
+      "maxPriceGbp": 24000,
+      "maxKm": 100000,
       "topN": 3
     }
   ]
