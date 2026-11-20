@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "node src/build-static.js",
+    "notify": "node src/notify.js",
     "scan": "node src/daily.js --scan",
     "daily": "node src/daily.js",
     "test": "node --test"

@@ -87,7 +87,19 @@ for (const key of keys) {
       label: model.label,
       total: view.summary.total,
       eligible: view.summary.eligible,
-      medianLandedGbp: Math.round(view.summary.medianLandedGbp || 0)
+      medianLandedGbp: Math.round(view.summary.medianLandedGbp || 0),
+      top: view.cars
+        .filter((c) => c.eligible)
+        .slice(0, 1)
+        .map((c) => ({
+          ym: `${c.regYear}/${String(c.regMonth || 1).padStart(2, '0')}`,
+          grade: (c.grade || '').replace(/^\d{4}(?:\/\d{1,2})?\s+/, '').trim(),
+          km: c.mileageKm,
+          totalGbp: Math.round(c.landed.totalGbp),
+          gap: Math.round(c.analysis.valueGap * 1000) / 10,
+          score: c.analysis.score,
+          url: c.url
+        }))
     });
 
     process.stdout.write(

@@ -64,3 +64,10 @@ jobs:
 
       - id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: WhatsApp bildirimi
+        env:
+          WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+          WHATSAPP_APIKEY: ${{ secrets.WHATSAPP_APIKEY }}
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: node src/notify.js

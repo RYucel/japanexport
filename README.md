@@ -247,6 +247,57 @@ npm run build # public/ altına statik site üret
 
 ---
 
+## WhatsApp bildirimi (ücretsiz)
+
+Her günün özeti (en iyi 5 fırsat + gümrüklü fiyatlar + site linki) WhatsApp'a gönderilir.
+[CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/) kullanılır — kişisel
+kullanım için ücretsizdir, resmî API değildir.
+
+**Kurulum (5 dakika):**
+
+1. Telefon rehberine **+34 644 51 95 23** numarasını `CallMeBot` adıyla ekleyin.
+2. WhatsApp'tan bu numaraya şu mesajı gönderin:
+   `I allow callmebot to send me messages`
+3. Gelen yanıttaki **API key**'i not edin.
+4. GitHub reposuna iki secret ekleyin:
+
+```powershell
+gh secret set WHATSAPP_PHONE  --body "+90533xxxxxxx"   # ülke kodlu
+gh secret set WHATSAPP_APIKEY --body "123456"          # CallMeBot anahtarı
+```
+
+   (veya repo → Settings → Secrets and variables → Actions)
+
+5. Denemek için **Actions → Günlük tarama ve yayın → Run workflow**.
+
+Yerelde denemek:
+
+```powershell
+$env:WHATSAPP_PHONE="+90533xxxxxxx"; $env:WHATSAPP_APIKEY="123456"
+node src/notify.js            # gönderir
+node src/notify.js --dry-run  # sadece mesajı gösterir
+```
+
+Örnek mesaj:
+
+```
+🚗 KKTC Araç Avcısı · 20 Kasım
+14 model · 6.812 ilan tarandı, 4.930 tanesi 5 yaşa uygun.
+
+🔥 Bugünün en iyi fırsatları:
+1) Toyota RAV4 · 2024/09 X
+   12.704 km · £24.536 gümrüklü · piyasa −%29,5
+...
+```
+
+Notlar:
+- CallMeBot dakikada 1 mesajla sınırlı; günde 1 özet için fazlasıyla yeterli.
+- Secret'lar tanımlı değilse bildirim sessizce atlanır, yayın etkilenmez.
+- Resmî **WhatsApp Cloud API** alternatifi: Meta Business hesabı + mesaj şablonu onayı gerekir;
+  günlük bildirimler ücretli olabilir, bu yüzden varsayılan olarak CallMeBot kullanılıyor.
+
+---
+
 ## Yapılandırma (`config.json`)
 
 | Anahtar | Anlamı |
@@ -322,6 +373,7 @@ src/
   view.js              istemciye giden sade JSON şekli
   daily.js             komut satırı: tarama + rapor
   build-static.js      statik site üretimi (Actions / Cloudflare)
+  notify.js            günlük WhatsApp özeti (CallMeBot)
 public/
   index.html           panel
   app.js               panel mantığı (veri yükler, maliyetleri hesaplar)
