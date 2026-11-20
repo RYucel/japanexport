@@ -189,7 +189,8 @@ async function sendTextMeFlow(text) {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${TMF_KEY}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
     },
     body: JSON.stringify({ to: TMF_TO, text }),
     signal: AbortSignal.timeout(25000)
