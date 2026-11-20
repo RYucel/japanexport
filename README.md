@@ -247,6 +247,36 @@ npm run build # public/ altına statik site üret
 
 ---
 
+## Telegram bildirimi (ücretsiz, en güvenilir)
+
+WhatsApp'a alternatif olarak aynı özet Telegram'a gönderilebilir. Kurulum ~2 dakika:
+
+1. Telegram'da **@BotFather** → `/newbot` → isim verin → **token** alın.
+2. Botunuza bir mesaj gönderin (ör. "merhaba").
+3. Chat id'yi bulun — tarayıcıda açın:
+   `https://api.telegram.org/bot<TOKEN>/getUpdates`
+   Yanıttaki `"chat":{"id":123456789` değerini alın.
+4. Secret'ları ekleyin ve sağlayıcıyı seçin:
+
+```powershell
+gh secret set TELEGRAM_TOKEN   --body "123456:ABC..."
+gh secret set TELEGRAM_CHAT_ID --body "123456789"
+gh variable set NOTIFY_PROVIDER --body "telegram"
+```
+
+5. Test: **Actions → Run workflow** (veya yerelde `node src/notify.js`).
+
+Yerelde chat id bulmak için:
+
+```powershell
+$env:TELEGRAM_TOKEN="123456:ABC..."
+node src/notify.js --telegram-setup
+```
+
+`NOTIFY_PROVIDER` boşsa: Telegram token'ı varsa Telegram, yoksa CallMeBot kullanılır.
+
+---
+
 ## WhatsApp bildirimi (ücretsiz)
 
 Her günün özeti (en iyi 5 fırsat + gümrüklü fiyatlar + site linki) WhatsApp'a gönderilir.
