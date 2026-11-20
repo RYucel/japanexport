@@ -255,7 +255,7 @@ kullanım için ücretsizdir, resmî API değildir.
 
 **Kurulum (5 dakika):**
 
-1. Telefon rehberine **+34 644 51 95 23** numarasını `CallMeBot` adıyla ekleyin.
+1. Telefon rehberine **+34 644 31 95 65** numarasını `CallMeBot` adıyla ekleyin.
 2. WhatsApp'tan bu numaraya şu mesajı gönderin:
    `I allow callmebot to send me messages`
 3. Gelen yanıttaki **API key**'i not edin.
@@ -291,6 +291,8 @@ node src/notify.js --dry-run  # sadece mesajı gösterir
 ```
 
 Notlar:
+- **Numara:** güncel bot numarası **+34 644 31 95 65** (callmebot.com'da doğrulayın; eski `+34 644 51 95 23` çalışmıyor).
+- Yanıt 2 dakika içinde gelmezse CallMeBot 24 saat beklemenizi istiyor; farklı bir numaradan denemeyin.
 - CallMeBot dakikada 1 mesajla sınırlı; günde 1 özet için fazlasıyla yeterli.
 - Secret'lar tanımlı değilse bildirim sessizce atlanır, yayın etkilenmez.
 - Resmî **WhatsApp Cloud API** alternatifi: Meta Business hesabı + mesaj şablonu onayı gerekir;
