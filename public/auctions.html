@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Müzayede · RAV4 Avcısı</title>
+<link rel="stylesheet" href="./style.css">
+<style>
+  .lot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .lot { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+  .lot-media { aspect-ratio: 16/10; background: #e8eef6; }
+  .lot-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lot-body { padding: 13px 15px 14px; display: grid; gap: 8px; }
+  .lot-title { font-size: 15px; font-weight: 700; color: var(--navy); margin: 0; }
+  .lot-sub { font-size: 12px; color: var(--muted); }
+  .lot-price { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+  .lot-price .v { font-size: 22px; font-weight: 800; color: var(--navy); }
+  .lot-price .k { font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .lot-price .side { text-align: right; font-size: 12.5px; color: var(--muted); }
+  .lot-price .side b { display: block; color: var(--ink); font-size: 15px; }
+  .warn { background: var(--gold-soft); border-left: 4px solid var(--gold); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #6b5015; margin: 0 0 18px; }
+  .model-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 26px 0 12px; }
+  .model-head h2 { margin: 0; font-size: 18px; color: var(--navy); }
+  .empty-lots { color: var(--muted); font-size: 14px; padding: 10px 2px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">🔨</div>
+      <div>
+        <h1>Müzayede</h1>
+        <p>Japonya açık artırma lotları · başlangıç fiyatları</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn ghost" href="./">← Panele dön</a>
+      <a class="btn ghost" href="./alerts.html">Alertler</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="padding-top:24px">
+  <div class="warn">
+    <b>Fiyatlar başlangıç fiyatıdır.</b> Kesin satış fiyatı ihalede oluşur ve Respect Motors'ta
+    görmek için giriş gerekir. Aşağıdaki “en az gümrüklü” tutar, başlangıç fiyatı + tahmini
+    ihaleye hazırlık masrafı (¥<span id="feesTxt">120.000</span>) üzerinden hesaplanan <b>alt sınırdır</b>.
+  </div>
+  <div id="content"></div>
+</main>
+
+<footer class="wrap foot">
+  <span>Kaynak: <a href="https://respectmotors.com/en/auctions/" target="_blank" rel="noopener">Respect Motors Auctions</a> · Fiyatlar JPY başlangıç</span>
+  <span id="stamp">—</span>
+</footer>
+
+<script type="module" src="./auctions.js"></script>
+</body>
+</html>

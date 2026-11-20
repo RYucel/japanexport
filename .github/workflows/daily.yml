@@ -41,6 +41,10 @@ jobs:
       - name: Tara ve statik site üret
         run: node src/build-static.js ${{ inputs.models && format('--models={0}', inputs.models) || '' }}
 
+      - name: Müzayede lotları
+        continue-on-error: true
+        run: node src/build-auctions.js
+
       - name: Fiyat geçmişini commit'le
         continue-on-error: true
         run: |

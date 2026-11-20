@@ -44,5 +44,11 @@
     "defaultBudgetGbp": 25000,
     "dealThreshold": 0.08,
     "port": 3000
+  },
+  "auctions": {
+    "enabled": true,
+    "models": ["rav4", "hilux", "jimny", "chr"],
+    "maxPages": 5,
+    "extraFeesJpy": 120000
   }
 }
