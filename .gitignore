@@ -11,3 +11,5 @@ public/reports/
 
 /gn_*.html
 /sbt_*.html
+
+/tmf.yaml
