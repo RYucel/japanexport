@@ -170,6 +170,18 @@ export function parseListings(html, { modelName = 'RAV4' } = {}) {
 export async function scan(search, { maxPages = 35, onProgress = () => {} } = {}) {
   const listUrl = buildListUrl(search);
   let html = await request(listUrl);
+
+  // Yanlış model yolu, sitenin "tüm marka" sayfasına düşer (on binlerce araç).
+  // Böyle bir durumda veriyi modele yazmamak için H1 başlığını doğrula.
+  const h1 = (/<h1[^>]*class="title-page"[^>]*>([\s\S]*?)<\/h1>/.exec(html)?.[1] || '').trim();
+  const norm = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const modelName = search.modelName || search.model;
+  const makeName = search.makeName || '';
+  if (h1 && (!norm(h1).includes(norm(modelName)) || (makeName && !norm(h1).includes(norm(makeName))))) {
+    console.warn(`Goo-net: ${makeName} ${modelName} doğrulanamadı ("${h1}") — atlandı.`);
+    return { cars: [], totalCount: 0, pagesFetched: 0, skipped: true };
+  }
+
   const totalCount = parseTotal(html);
   const form = extractForm(html);
 

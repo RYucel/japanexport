@@ -50,7 +50,7 @@ export async function getRawScan(cfg, { refresh = false, onProgress, cacheKey = 
     }
   }
 
-  if (sources.goonet?.enabled) {
+  if (sources.goonet?.enabled && cfg.search.modelName && cfg.search.makeName) {
     try {
       const r = await goonetScan(cfg.search, {
         maxPages: sources.goonet.maxPages ?? 35,

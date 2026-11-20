@@ -55,13 +55,21 @@ taranır (1–2 dk), sonrası gün boyu önbellekten gelir.
 
 | Marka | Modeller |
 |---|---|
-| Toyota | RAV4, Corolla, Yaris, C-HR, Hilux |
-| Nissan | X-Trail, Note |
-| Honda | Civic, CR-V |
-| Mazda | CX-5 |
-| Suzuki | Swift |
+| Toyota | RAV4, Corolla, Yaris, Yaris Cross, Corolla Cross, C-HR, Hilux, Land Cruiser Prado, Harrier |
+| Nissan | X-Trail, Juke, Note |
+| Honda | Civic, CR-V, Vezel, HR-V |
+| Mazda | CX-5, CX-30 |
+| Suzuki | Swift, Jimny |
 | Subaru | Forester |
-| Volkswagen | Golf, Passat |
+| Mitsubishi | Outlander |
+| Volkswagen | Golf, Passat, Tiguan |
+
+Bazı modeller Goo-net'te yok (Yaris Cross, Corolla Cross, Prado): `gnModel: null` verilir,
+o model için yalnızca SBT taranır. Yeni bir model eklemeden önce stok kontrolü:
+
+```powershell
+node scripts/check-models.mjs yaris-cross jimny tiguan
+```
 
 Yeni model eklemek için `models.json`'a bir kayıt ekleyin:
 

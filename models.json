@@ -32,6 +32,28 @@
     "vehicleType": "otomobil",
     "bodyLabel": "Hatchback"
   },
+  "yaris-cross": {
+    "label": "Toyota Yaris Cross",
+    "make": "TOYOTA",
+    "model": "YARIS CROSS",
+    "sbtMakeId": 2,
+    "sbtModel": "YARIS CROSS",
+    "gnMake": null,
+    "gnModel": null,
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "corolla-cross": {
+    "label": "Toyota Corolla Cross",
+    "make": "TOYOTA",
+    "model": "COROLLA CROSS",
+    "sbtMakeId": 2,
+    "sbtModel": "COROLLA CROSS",
+    "gnMake": null,
+    "gnModel": null,
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
   "chr": {
     "label": "Toyota C-HR",
     "make": "TOYOTA",
@@ -55,6 +77,28 @@
     "bodyLabel": "Pickup",
     "note": "Çift kabin pickup: gümrük hesabında ticari sınıf oranları uygulanır."
   },
+  "prado": {
+    "label": "Toyota Land Cruiser Prado",
+    "make": "TOYOTA",
+    "model": "LAND CRUISER PRADO",
+    "sbtMakeId": 2,
+    "sbtModel": "LAND CRUISER PRADO",
+    "gnMake": null,
+    "gnModel": null,
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "harrier": {
+    "label": "Toyota Harrier",
+    "make": "TOYOTA",
+    "model": "HARRIER",
+    "sbtMakeId": 2,
+    "sbtModel": "HARRIER",
+    "gnMake": "TOYOTA",
+    "gnModel": "HARRIER",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
   "xtrail": {
     "label": "Nissan X-Trail",
     "make": "NISSAN",
@@ -63,6 +107,17 @@
     "sbtModel": "X-TRAIL",
     "gnMake": "NISSAN",
     "gnModel": "X-TRAIL",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "juke": {
+    "label": "Nissan Juke",
+    "make": "NISSAN",
+    "model": "JUKE",
+    "sbtMakeId": 3,
+    "sbtModel": "JUKE",
+    "gnMake": "NISSAN",
+    "gnModel": "JUKE",
     "vehicleType": "suv",
     "bodyLabel": "SUV"
   },
@@ -99,6 +154,28 @@
     "vehicleType": "suv",
     "bodyLabel": "SUV"
   },
+  "vezel": {
+    "label": "Honda Vezel",
+    "make": "HONDA",
+    "model": "VEZEL",
+    "sbtMakeId": 4,
+    "sbtModel": "VEZEL",
+    "gnMake": "HONDA",
+    "gnModel": "VEZEL",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "hrv": {
+    "label": "Honda HR-V",
+    "make": "HONDA",
+    "model": "HR-V",
+    "sbtMakeId": 4,
+    "sbtModel": "HR-V",
+    "gnMake": "HONDA",
+    "gnModel": "HR-V",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
   "cx5": {
     "label": "Mazda CX-5",
     "make": "MAZDA",
@@ -107,6 +184,17 @@
     "sbtModel": "CX5",
     "gnMake": "MAZDA",
     "gnModel": "CX-5",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "cx30": {
+    "label": "Mazda CX-30",
+    "make": "MAZDA",
+    "model": "CX-30",
+    "sbtMakeId": 5,
+    "sbtModel": "CX-30",
+    "gnMake": "MAZDA",
+    "gnModel": "CX-30",
     "vehicleType": "suv",
     "bodyLabel": "SUV"
   },
@@ -121,6 +209,17 @@
     "vehicleType": "otomobil",
     "bodyLabel": "Hatchback"
   },
+  "jimny": {
+    "label": "Suzuki Jimny",
+    "make": "SUZUKI",
+    "model": "JIMNY",
+    "sbtMakeId": 9,
+    "sbtModel": "JIMNY",
+    "gnMake": "SUZUKI",
+    "gnModel": "JIMNY",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
   "forester": {
     "label": "Subaru Forester",
     "make": "SUBARU",
@@ -129,6 +228,17 @@
     "sbtModel": "FORESTER",
     "gnMake": "SUBARU",
     "gnModel": "FORESTER",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "outlander": {
+    "label": "Mitsubishi Outlander",
+    "make": "MITSUBISHI",
+    "model": "OUTLANDER",
+    "sbtMakeId": 6,
+    "sbtModel": "OUTLANDER",
+    "gnMake": "MITSUBISHI",
+    "gnModel": "OUTLANDER",
     "vehicleType": "suv",
     "bodyLabel": "SUV"
   },
@@ -153,5 +263,16 @@
     "gnModel": "PASSAT",
     "vehicleType": "otomobil",
     "bodyLabel": "Sedan"
+  },
+  "tiguan": {
+    "label": "Volkswagen Tiguan",
+    "make": "VOLKSWAGEN",
+    "model": "TIGUAN",
+    "sbtMakeId": 53,
+    "sbtModel": "TIGUAN",
+    "gnMake": "VOLKSWAGEN",
+    "gnModel": "TIGUAN",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
   }
 }
