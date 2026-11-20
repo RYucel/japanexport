@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alert Ayarları · RAV4 Avcısı</title>
+<link rel="stylesheet" href="./style.css">
+<style>
+  .alert-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+  .alert-form .full { grid-column: 1 / -1; }
+  .models-box { max-height: 220px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fbfdff; }
+  .models-box label { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; margin: 3px 10px 3px 0; }
+  .models-box h4 { margin: 8px 0 4px; font-size: 11px; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+  .alert-list { display: grid; gap: 10px; margin-top: 14px; }
+  .alert-item { display: flex; justify-content: space-between; gap: 12px; align-items: center; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #fff; }
+  .alert-item b { display: block; font-size: 14px; }
+  .alert-item span { color: var(--muted); font-size: 12.5px; }
+  .json-out { background: #0d2b45; color: #e7f0f9; border-radius: 12px; padding: 14px 16px; font: 12.5px/1.5 ui-monospace, Consolas, monospace; overflow: auto; max-height: 360px; white-space: pre; }
+  .row-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .tip { background: var(--gold-soft); border-left: 3px solid var(--gold); padding: 12px 14px; border-radius: 8px; font-size: 13px; color: #6b5015; margin: 16px 0; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">⚙️</div>
+      <div>
+        <h1>Alert Ayarları</h1>
+        <p>Hangi araçlar için mesaj gelsin?</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn ghost" href="./">← Panele dön</a>
+      <a class="btn primary" id="editLink" href="https://github.com/RYucel/japanexport/edit/main/alerts.json" target="_blank" rel="noopener">GitHub'da düzenle</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="padding-top:26px">
+
+  <div class="tip">
+    <b>Nasıl çalışır?</b> Aşağıda alert oluşturun → sağdaki JSON'u kopyalayın → GitHub'da
+    <code>alerts.json</code> dosyasına yapıştırın. Kaydettiğinizde bir sonraki günlük çalıştırma
+    (06:15) bu kurallara göre Telegram/WhatsApp mesajı gönderir.
+  </div>
+
+  <section class="controls">
+    <div class="alert-form">
+      <label class="ctrl full"><span>Alert adı</span><input id="aName" placeholder="ör. RAV4 · 25 bin £ altı"></label>
+
+      <label class="ctrl"><span>Maks. fiyat (£, gümrüklü)</span><input id="aMaxPrice" type="number" min="0" step="500" placeholder="25000"></label>
+      <label class="ctrl"><span>Min. fiyat (£)</span><input id="aMinPrice" type="number" min="0" step="500" placeholder="0"></label>
+      <label class="ctrl"><span>Maks. km</span><input id="aMaxKm" type="number" min="0" step="5000" placeholder="80000"></label>
+      <label class="ctrl"><span>Min. model yılı</span><input id="aMinYear" type="number" min="2000" max="2030" step="1" placeholder="2022"></label>
+      <label class="ctrl"><span>Yakıt</span>
+        <select id="aFuel"><option value="">Tümü</option><option value="petrol">Benzin</option><option value="hybrid">Hibrit</option></select>
+      </label>
+      <label class="ctrl"><span>Çekiş</span>
+        <select id="aDrive"><option value="">Tümü</option><option value="2WD">2WD</option><option value="4WD">4WD</option></select>
+      </label>
+      <label class="ctrl"><span>Min. piyasa farkı (%)</span><input id="aGap" type="number" min="0" max="50" step="1" placeholder="5"></label>
+      <label class="ctrl"><span>Mesajda kaç araç</span><input id="aTopN" type="number" min="1" max="10" step="1" value="3"></label>
+
+      <div class="full">
+        <span style="font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Modeller (boş = tümü)</span>
+        <div class="models-box" id="modelsBox"></div>
+      </div>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn primary" id="addBtn" type="button">Listeye ekle</button>
+      <button class="btn ghost" id="resetBtn" type="button" style="color:var(--navy);border-color:var(--line);background:#fff">Sıfırla</button>
+    </div>
+  </section>
+
+  <section class="controls">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <h2 style="margin:0;font-size:16px;color:var(--navy)">Alert listesi</h2>
+      <span class="muted" id="countTxt">0 alert</span>
+    </div>
+    <div class="alert-list" id="alertList"></div>
+  </section>
+
+  <section class="controls">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+      <h2 style="margin:0;font-size:16px;color:var(--navy)">alerts.json</h2>
+      <button class="btn primary sm" id="copyBtn" type="button">JSON'u kopyala</button>
+    </div>
+    <pre class="json-out" id="jsonOut">{}</pre>
+  </section>
+
+</main>
+
+<footer class="wrap foot">
+  <span>Kaydettikten sonra: Actions → “Günlük tarama ve yayın” → Run workflow ile hemen deneyin.</span>
+</footer>
+
+<script type="module" src="./alerts.js"></script>
+</body>
+</html>

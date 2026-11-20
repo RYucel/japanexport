@@ -99,31 +99,70 @@ async function telegramSetup() {
   for (const [id, name] of chats) console.log(`TELEGRAM_CHAT_ID=${id}   (${name})`);
 }
 
+function alertFilterText(f = {}) {
+  const bits = [];
+  if (f.maxPriceGbp > 0) bits.push(`≤£${nf.format(f.maxPriceGbp)}`);
+  if (f.maxKm > 0) bits.push(`≤${nf.format(f.maxKm)} km`);
+  if (f.minYear > 0) bits.push(`${f.minYear}+`);
+  if (f.fuel === 'hybrid') bits.push('hibrit');
+  if (f.fuel === 'petrol') bits.push('benzin');
+  if (f.drive) bits.push(f.drive);
+  if (f.minGapPct > 0) bits.push(`piyasa ≥%${fmtPct(f.minGapPct)}`);
+  return bits.join(' · ');
+}
+
+function alertSection(a) {
+  const out = [];
+  out.push(`🎯 ${a.name}${a.filters ? `  (${alertFilterText(a.filters)})` : ''}`);
+  const list = a.matches || [];
+  if (!list.length) {
+    out.push('   uygun ilan yok');
+  } else {
+    list.slice(0, 5).forEach((d, i) => {
+      const gap = d.gap >= 0 ? `−%${fmtPct(d.gap)}` : `+%${fmtPct(Math.abs(d.gap))}`;
+      const grade = d.grade ? ` ${d.grade}` : '';
+      out.push(`${i + 1}) ${d.model} · ${d.ym}${grade} · ${nf.format(d.km || 0)} km`);
+      out.push(`   £${nf.format(d.totalGbp)} gümrüklü · piyasa ${gap}`);
+      if (d.url) out.push(`   ${d.url}`);
+    });
+  }
+  out.push('');
+  return out;
+}
+
 function buildMessage(index, prefs) {
   const models = index.models || [];
-  const wanted = new Set(prefs.models || []);
-
-  let deals = models
-    .filter((m) => !wanted.size || wanted.has(m.key))
-    .flatMap((m) => (m.top || []).map((t) => ({ ...t, model: m.label })));
-
-  if (prefs.maxPriceGbp > 0) deals = deals.filter((d) => d.totalGbp <= prefs.maxPriceGbp);
-  if (prefs.minGapPct > 0) deals = deals.filter((d) => d.gap >= prefs.minGapPct);
-
-  deals = deals.sort((a, b) => b.score - a.score).slice(0, prefs.topN || 5);
-
   const total = models.reduce((a, m) => a + (m.total || 0), 0);
   const eligible = models.reduce((a, m) => a + (m.eligible || 0), 0);
 
   const lines = [];
   lines.push(`${prefs.header || '🚗 KKTC Araç Avcısı'} · ${trDate(new Date(index.updatedAt || Date.now()))}`);
   lines.push(`${models.length} model · ${nf.format(total)} ilan tarandı, ${nf.format(eligible)} tanesi 5 yaşa uygun.`);
+  lines.push('');
 
-  const budgetTxt =
-    prefs.maxPriceGbp > 0
-      ? `Bütçe: en fazla £${nf.format(prefs.maxPriceGbp)} gümrüklü.`
-      : '';
-  if (budgetTxt) lines.push(budgetTxt);
+  // 1) alerts.json profilleri (yeni yol)
+  if (Array.isArray(index.alerts)) {
+    if (!index.alerts.length) {
+      lines.push('Bugün alert kriterlerine uyan ilan çıkmadı.');
+    } else {
+      for (const a of index.alerts) lines.push(...alertSection(a));
+    }
+    lines.push(prefs.footer || 'Tüm liste ve maliyet dökümü:');
+    lines.push(SITE_URL);
+    return lines.join('\n');
+  }
+
+  // 2) Eski tek liste modu (notify.json → maxPriceGbp)
+  const wanted = new Set(prefs.models || []);
+  let deals = models
+    .filter((m) => !wanted.size || wanted.has(m.key))
+    .flatMap((m) => (m.top || []).map((t) => ({ ...t, model: m.label })));
+
+  if (prefs.maxPriceGbp > 0) deals = deals.filter((d) => d.totalGbp <= prefs.maxPriceGbp);
+  if (prefs.minGapPct > 0) deals = deals.filter((d) => d.gap >= prefs.minGapPct);
+  deals = deals.sort((a, b) => b.score - a.score).slice(0, prefs.topN || 5);
+
+  if (prefs.maxPriceGbp > 0) lines.push(`Bütçe: en fazla £${nf.format(prefs.maxPriceGbp)} gümrüklü.`);
   lines.push('');
 
   if (deals.length) {
@@ -137,11 +176,7 @@ function buildMessage(index, prefs) {
     });
     lines.push('');
   } else {
-    lines.push(
-      prefs.maxPriceGbp > 0
-        ? `Bugün £${nf.format(prefs.maxPriceGbp)} altında uygun fırsat yok.`
-        : 'Bugün uygun ilan bulunamadı.'
-    );
+    lines.push(prefs.maxPriceGbp > 0 ? `Bugün £${nf.format(prefs.maxPriceGbp)} altında uygun fırsat yok.` : 'Bugün uygun ilan bulunamadı.');
     lines.push('');
   }
 

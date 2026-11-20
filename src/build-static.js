@@ -30,6 +30,12 @@ const cfg = JSON.parse(await readFile(path.resolve('config.json'), 'utf8'));
 const models = await loadModels();
 const keys = only || Object.keys(models);
 
+const alertsCfg = await readFile(path.resolve('alerts.json'), 'utf8')
+  .then((s) => JSON.parse(s))
+  .catch(() => ({ alerts: [] }));
+const activeAlerts = (alertsCfg.alerts || []).filter((a) => a.enabled !== false);
+const alertMatches = new Map(activeAlerts.map((a) => [a.name, { alert: a, cars: [] }]));
+
 await mkdir(OUT_DATA, { recursive: true });
 await mkdir(OUT_REPORTS, { recursive: true });
 
@@ -62,6 +68,35 @@ for (const key of keys) {
     const state = await loadState(key);
     const view = await computeView({ cfg: runCfg, raw, fx, state, params: {} });
     const { gone } = await commitScan(raw, { ...view.summary, label: model.label }, view.cars, key);
+
+    // Alert profilleri: bu modelin uygun ilanlarını filtrele
+    for (const entry of alertMatches.values()) {
+      const a = entry.alert;
+      if (a.models?.length && !a.models.includes(key)) continue;
+      for (const c of view.cars) {
+        if (!c.eligible) continue;
+        if (a.maxPriceGbp > 0 && c.landed.totalGbp > a.maxPriceGbp) continue;
+        if (a.minPriceGbp > 0 && c.landed.totalGbp < a.minPriceGbp) continue;
+        if (a.maxKm > 0 && (c.mileageKm || 0) > a.maxKm) continue;
+        if (a.minYear > 0 && (c.regYear || 0) < a.minYear) continue;
+        if (a.fuel === 'hybrid' && !/HYBRID/i.test(c.fuel || '')) continue;
+        if (a.fuel === 'petrol' && /HYBRID|DIESEL/i.test(c.fuel || '')) continue;
+        if (a.drive && c.drive !== a.drive) continue;
+        if (a.minGapPct > 0 && c.analysis.valueGap * 100 < a.minGapPct) continue;
+
+        entry.cars.push({
+          model: model.label,
+          key,
+          ym: `${c.regYear}/${String(c.regMonth || 1).padStart(2, '0')}`,
+          grade: (c.grade || '').trim(),
+          km: c.mileageKm,
+          totalGbp: Math.round(c.landed.totalGbp),
+          gap: Math.round(c.analysis.valueGap * 1000) / 10,
+          score: c.analysis.score,
+          url: c.url
+        });
+      }
+    }
 
     const meta = buildMeta({ modelKey: key, model, raw, fx, opts: view.opts, cfg: runCfg, cached: raw.cached });
     await writeFile(path.join(OUT_DATA, `${key}.json`), JSON.stringify({ meta, cars: leanCars(view.cars) }), 'utf8');
@@ -121,9 +156,32 @@ try {
   /* yok */
 }
 
+const alertsOut = [...alertMatches.values()]
+  .map((e) => ({
+    name: e.alert.name,
+    filters: {
+      models: e.alert.models || [],
+      maxPriceGbp: e.alert.maxPriceGbp || 0,
+      minPriceGbp: e.alert.minPriceGbp || 0,
+      maxKm: e.alert.maxKm || 0,
+      minYear: e.alert.minYear || 0,
+      fuel: e.alert.fuel || '',
+      drive: e.alert.drive || '',
+      minGapPct: e.alert.minGapPct || 0
+    },
+    matches: e.cars.sort((a, b) => b.score - a.score).slice(0, e.alert.topN || 5)
+  }))
+  .filter((a) => a.matches.length);
+
 await writeFile(
   path.join(OUT_DATA, 'index.json'),
-  JSON.stringify({ updatedAt: new Date().toISOString(), models: built, failed }, null, 2),
+  JSON.stringify({ updatedAt: new Date().toISOString(), models: built, failed, alerts: alertsOut }, null, 2),
+  'utf8'
+);
+
+await writeFile(
+  path.join(OUT_DATA, 'alerts.json'),
+  JSON.stringify(alertsCfg, null, 2),
   'utf8'
 );
 

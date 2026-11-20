@@ -268,6 +268,63 @@ npm run build # public/ altına statik site üret
 
 ---
 
+## Alertler (arama profilleri)
+
+Mesajların hangi kriterlerle gideceğini `alerts.json` belirler. Birden fazla profil tanımlanabilir;
+her profil mesajda ayrı bölüm olarak çıkar.
+
+**En kolay yol:** panelde **Alertler** sayfası (`/alerts.html`) → formu doldur → **JSON'u kopyala** →
+GitHub'da `alerts.json` dosyasına yapıştır. Kaydettiğinizde bir sonraki 06:15 çalıştırması geçerli olur.
+
+```json
+{
+  "alerts": [
+    {
+      "name": "RAV4 · 25 bin £ altı",
+      "enabled": true,
+      "models": ["rav4"],
+      "maxPriceGbp": 25000,
+      "maxKm": 80000,
+      "minYear": 2022,
+      "minGapPct": 5,
+      "topN": 3
+    },
+    {
+      "name": "SUV · 18 bin £ altı",
+      "enabled": true,
+      "models": ["yaris-cross", "corolla-cross", "chr", "vezel", "jimny", "cx30"],
+      "maxPriceGbp": 18000,
+      "maxKm": 90000,
+      "minYear": 2022,
+      "minGapPct": 8,
+      "topN": 3
+    }
+  ]
+}
+```
+
+| Alan | Anlamı |
+|---|---|
+| `name` | Mesajdaki bölüm başlığı |
+| `enabled` | `false` ise taranmaz/gönderilmez |
+| `models` | Model anahtarları (`models.json`). Boş dizi = tüm modeller |
+| `maxPriceGbp` | Gümrüklü üst bütçe (£) |
+| `minPriceGbp` | Alt bütçe (£) |
+| `maxKm` | Maksimum kilometre |
+| `minYear` | Minimum model yılı |
+| `fuel` | `petrol` veya `hybrid` (boş = tümü) |
+| `drive` | `2WD` / `4WD` (boş = tümü) |
+| `minGapPct` | Piyasa farkı alt sınırı (%) |
+| `topN` | Bu profilde mesaja girecek araç sayısı (1–10) |
+
+> Eşleşme, tüm ilanlar üzerinden yapılır (sadece “en iyi 12” içinden değil); mesajda en yüksek skorlu
+> `topN` araç gösterilir. Profil boşsa mesajda “uygun ilan yok” yazar.
+
+`alerts.json` tanımlıysa `notify.json` içindeki `maxPriceGbp`/`models` alanları kullanılmaz;
+`notify.json` yalnızca başlık, kapanış ve yedek mod için kalır.
+
+---
+
 ## Bildirim özelleştirme (`notify.json`)
 
 Telegram ve WhatsApp mesajları bu dosyadan ayarlanır:
