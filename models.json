@@ -1,0 +1,157 @@
+{
+  "rav4": {
+    "label": "Toyota RAV4",
+    "make": "TOYOTA",
+    "model": "RAV4",
+    "sbtMakeId": 2,
+    "sbtModel": "RAV4",
+    "gnMake": "TOYOTA",
+    "gnModel": "RAV4",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "corolla": {
+    "label": "Toyota Corolla",
+    "make": "TOYOTA",
+    "model": "COROLLA",
+    "sbtMakeId": 2,
+    "sbtModel": "COROLLA",
+    "gnMake": "TOYOTA",
+    "gnModel": "COROLLA",
+    "vehicleType": "otomobil",
+    "bodyLabel": "Sedan"
+  },
+  "yaris": {
+    "label": "Toyota Yaris",
+    "make": "TOYOTA",
+    "model": "YARIS",
+    "sbtMakeId": 2,
+    "sbtModel": "YARIS",
+    "gnMake": "TOYOTA",
+    "gnModel": "YARIS",
+    "vehicleType": "otomobil",
+    "bodyLabel": "Hatchback"
+  },
+  "chr": {
+    "label": "Toyota C-HR",
+    "make": "TOYOTA",
+    "model": "C-HR",
+    "sbtMakeId": 2,
+    "sbtModel": "C-HR",
+    "gnMake": "TOYOTA",
+    "gnModel": "C-HR",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "hilux": {
+    "label": "Toyota Hilux",
+    "make": "TOYOTA",
+    "model": "HILUX",
+    "sbtMakeId": 2,
+    "sbtModel": "HILUX",
+    "gnMake": "TOYOTA",
+    "gnModel": "HILUX",
+    "vehicleType": "ticari",
+    "bodyLabel": "Pickup",
+    "note": "Çift kabin pickup: gümrük hesabında ticari sınıf oranları uygulanır."
+  },
+  "xtrail": {
+    "label": "Nissan X-Trail",
+    "make": "NISSAN",
+    "model": "X-TRAIL",
+    "sbtMakeId": 3,
+    "sbtModel": "X-TRAIL",
+    "gnMake": "NISSAN",
+    "gnModel": "X-TRAIL",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "note": {
+    "label": "Nissan Note",
+    "make": "NISSAN",
+    "model": "NOTE",
+    "sbtMakeId": 3,
+    "sbtModel": "NOTE",
+    "gnMake": "NISSAN",
+    "gnModel": "NOTE",
+    "vehicleType": "otomobil",
+    "bodyLabel": "Hatchback"
+  },
+  "civic": {
+    "label": "Honda Civic",
+    "make": "HONDA",
+    "model": "CIVIC",
+    "sbtMakeId": 4,
+    "sbtModel": "CIVIC",
+    "gnMake": "HONDA",
+    "gnModel": "CIVIC",
+    "vehicleType": "otomobil",
+    "bodyLabel": "Sedan"
+  },
+  "crv": {
+    "label": "Honda CR-V",
+    "make": "HONDA",
+    "model": "CRV",
+    "sbtMakeId": 4,
+    "sbtModel": "CRV",
+    "gnMake": "HONDA",
+    "gnModel": "CR-V",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "cx5": {
+    "label": "Mazda CX-5",
+    "make": "MAZDA",
+    "model": "CX5",
+    "sbtMakeId": 5,
+    "sbtModel": "CX5",
+    "gnMake": "MAZDA",
+    "gnModel": "CX-5",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "swift": {
+    "label": "Suzuki Swift",
+    "make": "SUZUKI",
+    "model": "SWIFT",
+    "sbtMakeId": 9,
+    "sbtModel": "SWIFT",
+    "gnMake": "SUZUKI",
+    "gnModel": "SWIFT",
+    "vehicleType": "otomobil",
+    "bodyLabel": "Hatchback"
+  },
+  "forester": {
+    "label": "Subaru Forester",
+    "make": "SUBARU",
+    "model": "FORESTER",
+    "sbtMakeId": 7,
+    "sbtModel": "FORESTER",
+    "gnMake": "SUBARU",
+    "gnModel": "FORESTER",
+    "vehicleType": "suv",
+    "bodyLabel": "SUV"
+  },
+  "golf": {
+    "label": "Volkswagen Golf",
+    "make": "VOLKSWAGEN",
+    "model": "GOLF",
+    "sbtMakeId": 53,
+    "sbtModel": "GOLF",
+    "gnMake": "VOLKSWAGEN",
+    "gnModel": "GOLF",
+    "vehicleType": "otomobil",
+    "bodyLabel": "Hatchback"
+  },
+  "passat": {
+    "label": "Volkswagen Passat",
+    "make": "VOLKSWAGEN",
+    "model": "PASSAT",
+    "sbtMakeId": 53,
+    "sbtModel": "PASSAT",
+    "gnMake": "VOLKSWAGEN",
+    "gnModel": "PASSAT",
+    "vehicleType": "otomobil",
+    "bodyLabel": "Sedan"
+  }
+}

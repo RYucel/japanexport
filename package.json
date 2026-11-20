@@ -1,0 +1,17 @@
+{
+  "name": "japan-export-guide",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Japonya'dan KKTC'ye araç ithalatı: SBT Japan ilanları + navlun + komisyon + KKTC gümrük vergisi ile gümrüklü (plakalı) fiyat ve günlük fırsat raporu.",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build": "node src/build-static.js",
+    "scan": "node src/daily.js --scan",
+    "daily": "node src/daily.js",
+    "test": "node --test"
+  }
+}

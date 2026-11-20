@@ -1,0 +1,47 @@
+{
+  "activeModel": "rav4",
+  "search": {
+    "steering": "RHD",
+    "yearFromBack": 4,
+    "maxPages": 30,
+    "sort": "-registration_year_month",
+    "includeSold": false
+  },
+  "sources": {
+    "sbt": { "enabled": true },
+    "goonet": { "enabled": true, "maxPages": 35 }
+  },
+  "shipping": {
+    "port": "FAMAGUSTA",
+    "method": "roro",
+    "freightUsd": {
+      "FAMAGUSTA": 1350,
+      "MERSIN": 1250,
+      "ISKENDERUN": 1300
+    },
+    "containerUsd": {
+      "FAMAGUSTA": 2600,
+      "MERSIN": 2450,
+      "ISKENDERUN": 2500
+    },
+    "insuranceRate": 0.015
+  },
+  "fees": {
+    "commissionGbp": 2000,
+    "kktcRegistrationTry": 0,
+    "dealerGbp": 0
+  },
+  "customs": {
+    "importerType": "sahis",
+    "arrivalDays": 90,
+    "maxAgeMonths": 60,
+    "origin": "japonya",
+    "vehicleType": "suv",
+    "mode": "sea"
+  },
+  "ui": {
+    "defaultBudgetGbp": 0,
+    "dealThreshold": 0.08,
+    "port": 3000
+  }
+}

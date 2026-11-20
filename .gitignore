@@ -1,0 +1,10 @@
+node_modules/
+data/cache/
+data/fx.json
+data/state.json
+data/snapshots/
+research/
+public/data/
+public/reports/
+*.log
+.DS_Store

@@ -1,0 +1,66 @@
+name: Günlük tarama ve yayın
+
+on:
+  schedule:
+    # Her gün 03:15 UTC (KKTC 06:15)
+    - cron: "15 3 * * *"
+  workflow_dispatch:
+    inputs:
+      commit_site:
+        description: "Statik veriyi de commit'le (Cloudflare Pages gibi build'siz hostlar için)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Tara ve statik site üret
+        run: node src/build-static.js
+
+      - name: Fiyat geçmişini commit'le
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state-*.json data/reports 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "data: fiyat geçmişi $(date -u +%F)"
+            git push
+          fi
+
+      - name: Statik veriyi commit'le (opsiyonel)
+        if: ${{ inputs.commit_site }}
+        run: |
+          git add -f public/data public/reports
+          if ! git diff --cached --quiet; then
+            git commit -m "site: veri $(date -u +%F)"
+            git push
+          fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
