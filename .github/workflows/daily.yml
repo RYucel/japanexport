@@ -52,8 +52,11 @@ jobs:
             exit 0
           fi
           git commit -m "data: fiyat geçmişi $(date -u +%F)"
-          git pull --rebase --autostash origin main
-          git push
+          for i in 1 2 3 4; do
+            git pull --rebase --autostash origin main && git push && break
+            echo "push denemesi $i başarısız, 10 sn sonra tekrar..."
+            sleep 10
+          done
 
       - name: Statik veriyi commit'le (opsiyonel)
         if: ${{ inputs.commit_site }}
@@ -62,8 +65,11 @@ jobs:
           git add -f public/data public/reports
           if ! git diff --cached --quiet; then
             git commit -m "site: veri $(date -u +%F)"
-            git pull --rebase --autostash origin main
-            git push
+            for i in 1 2 3; do
+              git pull --rebase --autostash origin main && git push && break
+              echo "push denemesi $i başarısız, 10 sn sonra tekrar..."
+              sleep 10
+            done
           fi
 
       - uses: actions/configure-pages@v5

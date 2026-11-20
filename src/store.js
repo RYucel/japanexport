@@ -28,12 +28,12 @@ export async function loadState(key = 'default') {
 
 export async function saveState(state, key = 'default') {
   await mkdir(DATA_DIR, { recursive: true });
-  await writeFile(stateFile(key), JSON.stringify(state, null, 2), 'utf8');
+  await writeFile(stateFile(key), JSON.stringify(state), 'utf8');
 }
 
 export async function saveSnapshot(date, payload, key = 'default') {
   await mkdir(SNAP_DIR, { recursive: true });
-  await writeFile(path.join(SNAP_DIR, `${date}-${key}.json`), JSON.stringify(payload, null, 2), 'utf8');
+  await writeFile(path.join(SNAP_DIR, `${date}-${key}.json`), JSON.stringify(payload), 'utf8');
 }
 
 export async function listSnapshots(key = 'default') {
