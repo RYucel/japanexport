@@ -85,6 +85,7 @@ function buildMessage(index) {
       const grade = d.grade ? ` ${d.grade}` : '';
       lines.push(`${i + 1}) ${d.model} · ${d.ym}${grade}`);
       lines.push(`   ${nf.format(d.km || 0)} km · £${nf.format(d.totalGbp)} gümrüklü · ${gap}`);
+      if (d.url) lines.push(`   ${d.url}`);
     });
     lines.push('');
   } else {
