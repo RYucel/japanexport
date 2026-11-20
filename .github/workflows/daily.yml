@@ -6,6 +6,10 @@ on:
     - cron: "15 3 * * *"
   workflow_dispatch:
     inputs:
+      models:
+        description: "Sadece bu modeller (virgülle, ör. rav4,corolla). Boş = tümü"
+        type: string
+        default: ""
       commit_site:
         description: "Statik veriyi de commit'le (Cloudflare Pages gibi build'siz hostlar için)"
         type: boolean
@@ -35,7 +39,7 @@ jobs:
           node-version: 22
 
       - name: Tara ve statik site üret
-        run: node src/build-static.js
+        run: node src/build-static.js ${{ inputs.models && format('--models={0}', inputs.models) || '' }}
 
       - name: Fiyat geçmişini commit'le
         run: |
