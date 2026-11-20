@@ -294,6 +294,20 @@ Telegram ve WhatsApp mesajları bu dosyadan ayarlanır:
 Değişiklikten sonra bir sonraki günlük çalıştırma yeni ayarları kullanır.
 Yerelde denemek için: `node src/notify.js --dry-run`
 
+### Kanallar (birden fazla açık olabilir)
+
+`NOTIFY_PROVIDER` virgülle ayrılmış liste alır:
+
+```powershell
+gh variable set NOTIFY_PROVIDER --body "telegram,textmeflow"   # ikisine birden
+gh variable set NOTIFY_PROVIDER --body "all"                   # yapılandırılmış tüm kanallar
+gh variable set NOTIFY_PROVIDER --body "telegram"              # sadece Telegram
+```
+
+Şu an: **telegram,textmeflow**. TextMeFlow anahtarı eklenince ikisi de aynı mesajı gönderir;
+birini elemek için listeyi güncellemek yeterli. Bir kanal hata verirse diğeri etkilenmez,
+workflow durmaz.
+
 > Paneldeki varsayılan bütçe filtresi `config.json → ui.defaultBudgetGbp` ile gelir
 > (şu an 25.000 £). Boş bırakmak için `0` yapın.
 
