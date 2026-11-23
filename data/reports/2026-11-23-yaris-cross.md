@@ -4,10 +4,10 @@
 
 ## Özet
 
-- Taranan ilan: **1037** (kaynaklarda toplam 1060)
-- Kaynak dağılımı: SBT 1037
-- 5 yaş kuralına uyan: **980**
-- Uygun araçların medyan gümrüklü fiyatı: **£25.344** (en düşük £15.973, en yüksek £44.309)
+- Taranan ilan: **1036** (kaynaklarda toplam 1060)
+- Kaynak dağılımı: SBT 1036
+- 5 yaş kuralına uyan: **979**
+- Uygun araçların medyan gümrüklü fiyatı: **£25.350** (en düşük £15.973, en yüksek £44.309)
 - Ortalama vergi yükü (CIF üzerine): **%48,2**
 - Varsayımlar: navlun konteyner (paylaşımlı) FAMAGUSTA 2750 $/araç, sigorta %1,5, komisyon £2.000, ithalatçı: satıcı/galeri (%4 stopaj), varış 90 gün.
 
@@ -17,7 +17,7 @@
 |---|---|---|---|---|---|---|---|---|
 | 2024/11 TOYOTA YARIS CROSS X | X | 14.075 km | 2,3 yıl | £9.576 | **£19.515** | %30,3 | 100 | [SBT DAD7949](https://www.sbtjapan.com/used-cars/toyota/yaris-cross/DAD7949) |
 | 2025/06 TOYOTA YARIS CROSS G | G | 23.000 km | 1,7 yıl | £9.965 | **£20.100** | %29,8 | 95 | [SBT DBU7222](https://www.sbtjapan.com/used-cars/toyota/yaris-cross/DBU7222) |
-| 2025/06 TOYOTA YARIS CROSS G | G | 20.700 km | 1,7 yıl | £9.919 | **£20.031** | %30,3 | 95 | [SBT DCP5686](https://www.sbtjapan.com/used-cars/toyota/yaris-cross/DCP5686) |
+| 2025/06 TOYOTA YARIS CROSS G | G | 20.700 km | 1,7 yıl | £9.919 | **£20.031** | %30,4 | 95 | [SBT DCP5686](https://www.sbtjapan.com/used-cars/toyota/yaris-cross/DCP5686) |
 | 2023/10 TOYOTA YARIS CROSS | — | 29.531 km | 3,4 yıl | £8.883 | **£18.472** | %30,5 | 95 | [SBT DAS9364](https://www.sbtjapan.com/used-cars/toyota/yaris-cross/DAS9364) |
 | 2022/10 TOYOTA YARIS CROSS | — | 87.905 km | 4,4 yıl | £7.374 | **£16.202** | %36,2 | 95 | [SBT DAD5578](https://www.sbtjapan.com/used-cars/toyota/yaris-cross/DAD5578) |
 | 2022/09 TOYOTA YARIS CROSS HYBRID X | HYBRID X | 141.000 km | 4,5 yıl | £7.298 | **£16.088** | %33,1 | 95 | [SBT AW6909](https://www.sbtjapan.com/used-cars/toyota/yaris-cross/AW6909) |

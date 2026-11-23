@@ -4,8 +4,8 @@
 
 ## Özet
 
-- Taranan ilan: **58** (kaynaklarda toplam 60)
-- Kaynak dağılımı: SBT 15 · Goo-net 43
+- Taranan ilan: **60** (kaynaklarda toplam 62)
+- Kaynak dağılımı: SBT 15 · Goo-net 45
 - 5 yaş kuralına uyan: **6**
 - Uygun araçların medyan gümrüklü fiyatı: **£36.969** (en düşük £32.306, en yüksek £46.462)
 - Ortalama vergi yükü (CIF üzerine): **%54,2**
