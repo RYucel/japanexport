@@ -18,20 +18,13 @@
 | 2026/02 TOYOTA COROLLA CROSS | — | 6.528 km | 1,1 yıl | £14.216 | **£26.496** | %27,7 | 92 | [SBT DBL4578](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DBL4578) |
 | 2024/11 TOYOTA COROLLA CROSS 2.0 G X | 2.0 G X | 21.358 km | 2,3 yıl | £11.412 | **£22.278** | %26,2 | 89 | [SBT DAM5962](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DAM5962) |
 | 2025/02 TOYOTA COROLLA CROSS | — | 7.395 km | 2,1 yıl | £12.448 | **£23.836** | %19,9 | 85 | [SBT DZV2866](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DZV2866) |
-| 2023/07 TOYOTA COROLLA CROSS | — | 64.723 km | 3,6 yıl | £11.702 | **£22.713** | %18,9 | 84 | [SBT DAV2738](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DAV2738) |
 | 2024/02 TOYOTA COROLLA CROSS Z | Z | 17.000 km | 3,1 yıl | £11.961 | **£23.103** | %18,7 | 83 | [SBT AX4839](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/AX4839) |
+| 2023/07 TOYOTA COROLLA CROSS | — | 64.723 km | 3,6 yıl | £11.702 | **£22.713** | %18,9 | 78 | [SBT DAV2738](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DAV2738) |
 | 2025/02 TOYOTA COROLLA CROSS | — | 5.209 km | 2,1 yıl | £13.903 | **£26.026** | %13,1 | 75 | [SBT DCZ3483](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DCZ3483) |
 | 2025/01 TOYOTA COROLLA CROSS 2.0 Z | 2.0 Z | 19.160 km | 2,1 yıl | £13.560 | **£25.510** | %16,3 | 74 | [SBT DAG3396](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DAG3396) |
 | 2023/07 TOYOTA COROLLA CROSS | — | 45.100 km | 3,6 yıl | £12.722 | **£24.249** | %15,2 | 73 | [SBT DAE5637](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DAE5637) |
 
 > Piyasa farkı: aynı yaş/km'deki emsallerine göre FOB fiyatının ne kadar altında olduğu (pozitif = ucuz).
-
-## Fiyatı düşenler
-
-| Araç | Eski FOB | Yeni FOB | Düşüş | KKTC gümrüklü | İlan |
-|---|---|---|---|---|---|
-| 2023/02 TOYOTA COROLLA CROSS | £110 | £16.684 | −%4,5 | **£30.210** | [SBT DBL4399](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DBL4399) |
-| 2023/07 TOYOTA COROLLA CROSS | £77 | £11.702 | −%4,0 | **£22.713** | [SBT DAV2738](https://www.sbtjapan.com/used-cars/toyota/corolla-cross/DAV2738) |
 
 ## Listeden düşenler (muhtemelen satıldı)
 
