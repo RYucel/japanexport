@@ -23,6 +23,8 @@ function filterText(a) {
   if (a.drive) bits.push(a.drive);
   if (a.minGapPct) bits.push(`≥%${a.minGapPct}`);
   if (a.models?.length) bits.push(`${a.models.length} model`);
+  if (a.includeAuctions) bits.push('🔨 müzayede dahil');
+  if (a.channels?.length) bits.push(a.channels.join(' + '));
   return bits.join(' · ') || 'filtre yok';
 }
 
@@ -98,6 +100,9 @@ function readForm() {
   if (minGapPct) a.minGapPct = minGapPct;
   if ($('aFuel').value) a.fuel = $('aFuel').value;
   if ($('aDrive').value) a.drive = $('aDrive').value;
+  if ($('aAuctions').checked) a.includeAuctions = true;
+  const channels = [...document.querySelectorAll('[data-channel]:checked')].map((c) => c.value);
+  if (channels.length) a.channels = channels;
   a.topN = topN;
   return a;
 }
@@ -107,7 +112,9 @@ function resetForm() {
   $('aTopN').value = '3';
   $('aFuel').value = '';
   $('aDrive').value = '';
+  $('aAuctions').checked = false;
   for (const c of document.querySelectorAll('[data-model]')) c.checked = false;
+  for (const c of document.querySelectorAll('[data-channel]')) c.checked = false;
 }
 
 async function init() {

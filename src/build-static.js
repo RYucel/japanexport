@@ -16,6 +16,7 @@ import { loadModels, searchFor, listModels } from './models.js';
 import { buildMeta, leanCars } from './view.js';
 import { loadState } from './store.js';
 import { buildReport, renderReportHtml } from './report.js';
+import { computeLanded } from '../public/lib/landed.js';
 
 const args = process.argv.slice(2);
 const has = (f) => args.includes(f);
@@ -34,7 +35,15 @@ const alertsCfg = await readFile(path.resolve('alerts.json'), 'utf8')
   .then((s) => JSON.parse(s))
   .catch(() => ({ alerts: [] }));
 const activeAlerts = (alertsCfg.alerts || []).filter((a) => a.enabled !== false);
-const alertMatches = new Map(activeAlerts.map((a) => [a.name, { alert: a, cars: [] }]));
+const alertMatches = new Map(activeAlerts.map((a) => [a.name, { alert: a, cars: [], auctions: [] }]));
+
+const auctionsData = await readFile(path.join(OUT_DATA, 'auctions.json'), 'utf8')
+  .then((s) => JSON.parse(s))
+  .catch(() => null);
+if (auctionsData) {
+  console.log(`🔨 Müzayede verisi bulundu: ${(auctionsData.models || []).length} model`);
+}
+const historyOut = [];
 
 await mkdir(OUT_DATA, { recursive: true });
 await mkdir(OUT_REPORTS, { recursive: true });
@@ -96,7 +105,56 @@ for (const key of keys) {
           url: c.url
         });
       }
+
+      // Müzayede lotları (alert.includeAuctions)
+      if (a.includeAuctions && auctionsData) {
+        const am = (auctionsData.models || []).find((m) => m.key === key);
+        for (const lot of am?.lots || []) {
+          const car = {
+            priceAmount: lot.totalJpy,
+            priceCurrency: 'JPY',
+            regYear: lot.regYear,
+            regMonth: 1,
+            engineCc: lot.engineCc || 2000,
+            fuel: lot.fuel,
+            mileageKm: lot.mileageKm || 0
+          };
+          const L = computeLanded(car, fx, view.opts);
+          if (a.maxPriceGbp > 0 && L.totalGbp > a.maxPriceGbp) continue;
+          if (a.minPriceGbp > 0 && L.totalGbp < a.minPriceGbp) continue;
+          if (a.maxKm > 0 && (lot.mileageKm || 0) > a.maxKm) continue;
+          if (a.minYear > 0 && (lot.regYear || 0) < a.minYear) continue;
+          if (a.fuel === 'hybrid' && lot.fuel !== 'HYBRID') continue;
+          if (a.fuel === 'petrol' && lot.fuel === 'HYBRID') continue;
+
+          entry.auctions.push({
+            kind: 'auction',
+            model: model.label,
+            key,
+            ym: `${lot.regYear}/01`,
+            grade: lot.auction || '',
+            km: lot.mileageKm,
+            totalGbp: Math.round(L.totalGbp),
+            gap: null,
+            score: 0,
+            startJpy: lot.startJpy,
+            url: lot.url
+          });
+        }
+      }
     }
+
+    const st2 = await loadState(key);
+    historyOut.push({
+      key,
+      label: model.label,
+      points: (st2.scans || []).slice(-60).map((s) => ({
+        date: s.date,
+        median: Math.round(s.medianLandedGbp || 0),
+        min: Math.round(s.minLandedGbp || 0),
+        eligible: s.eligible || 0
+      }))
+    });
 
     const meta = buildMeta({ modelKey: key, model, raw, fx, opts: view.opts, cfg: runCfg, cached: raw.cached });
     await writeFile(path.join(OUT_DATA, `${key}.json`), JSON.stringify({ meta, cars: leanCars(view.cars) }), 'utf8');
@@ -159,6 +217,8 @@ try {
 const alertsOut = [...alertMatches.values()]
   .map((e) => ({
     name: e.alert.name,
+    channels: e.alert.channels || [],
+    includeAuctions: !!e.alert.includeAuctions,
     filters: {
       models: e.alert.models || [],
       maxPriceGbp: e.alert.maxPriceGbp || 0,
@@ -169,13 +229,24 @@ const alertsOut = [...alertMatches.values()]
       drive: e.alert.drive || '',
       minGapPct: e.alert.minGapPct || 0
     },
-    matches: e.cars.sort((a, b) => b.score - a.score).slice(0, e.alert.topN || 5)
+    matches: e.cars
+      .sort((a, b) => b.score - a.score)
+      .slice(0, e.alert.topN || 5),
+    auctions: e.auctions
+      .sort((a, b) => b.totalGbp - a.totalGbp)
+      .slice(0, e.alert.auctionTopN ?? 2)
   }))
-  .filter((a) => a.matches.length);
+  .filter((a) => a.matches.length || a.auctions.length);
 
 await writeFile(
   path.join(OUT_DATA, 'index.json'),
   JSON.stringify({ updatedAt: new Date().toISOString(), models: built, failed, alerts: alertsOut }, null, 2),
+  'utf8'
+);
+
+await writeFile(
+  path.join(OUT_DATA, 'history.json'),
+  JSON.stringify({ updatedAt: new Date().toISOString(), models: historyOut }, null, 2),
   'utf8'
 );
 

@@ -114,6 +114,7 @@ function alertFilterText(f = {}) {
 function alertSection(a) {
   const out = [];
   out.push(`🎯 ${a.name}${a.filters ? `  (${alertFilterText(a.filters)})` : ''}`);
+
   const list = a.matches || [];
   if (!list.length) {
     out.push('   uygun ilan yok');
@@ -126,11 +127,21 @@ function alertSection(a) {
       if (d.url) out.push(`   ${d.url}`);
     });
   }
+
+  if (a.auctions?.length) {
+    out.push('   🔨 Müzayede lotları (başlangıç fiyatı):');
+    a.auctions.slice(0, 3).forEach((d) => {
+      const year = String(d.ym).split('/')[0];
+      out.push(`   • ${d.model} · ${year} · ${nf.format(d.km || 0)} km · en az £${nf.format(d.totalGbp)}`);
+      if (d.url) out.push(`     ${d.url}`);
+    });
+  }
+
   out.push('');
   return out;
 }
 
-function buildMessage(index, prefs) {
+function buildMessage(index, prefs, allowAlert = () => true) {
   const models = index.models || [];
   const total = models.reduce((a, m) => a + (m.total || 0), 0);
   const eligible = models.reduce((a, m) => a + (m.eligible || 0), 0);
@@ -142,10 +153,11 @@ function buildMessage(index, prefs) {
 
   // 1) alerts.json profilleri (yeni yol)
   if (Array.isArray(index.alerts)) {
-    if (!index.alerts.length) {
-      lines.push('Bugün alert kriterlerine uyan ilan çıkmadı.');
+    const alerts = index.alerts.filter(allowAlert);
+    if (!alerts.length) {
+      lines.push('Bu kanala atanmış alert yok.');
     } else {
-      for (const a of index.alerts) lines.push(...alertSection(a));
+      for (const a of alerts) lines.push(...alertSection(a));
     }
     lines.push(prefs.footer || 'Tüm liste ve maliyet dökümü:');
     lines.push(SITE_URL);
@@ -257,9 +269,9 @@ async function main() {
   }
 
   const prefs = await loadPrefs();
-  const text = buildMessage(index, prefs);
 
   if (dryRun) {
+    const text = buildMessage(index, prefs);
     console.log('\n--- MESAJ ---\n' + text + '\n--- /MESAJ ---\n');
     return;
   }
@@ -277,6 +289,12 @@ async function main() {
       console.log(`ℹ️  ${s.label}: yapılandırılmadı, atlandı.`);
       continue;
     }
+    const allow = (a) => !a.channels?.length || a.channels.includes(key);
+    if (Array.isArray(index.alerts) && !index.alerts.some(allow)) {
+      console.log(`ℹ️  ${s.label}: bu kanala atanmış alert yok, atlandı.`);
+      continue;
+    }
+    const text = buildMessage(index, prefs, allow);
     try {
       await s.send(text);
       ok++;

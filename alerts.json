@@ -10,7 +10,8 @@
       "maxKm": 80000,
       "minYear": 2022,
       "minGapPct": 5,
-      "topN": 3
+      "topN": 3,
+      "includeAuctions": true
     },
     {
       "name": "SUV · 18 bin £ altı",

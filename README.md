@@ -320,12 +320,48 @@ GitHub'da `alerts.json` dosyasına yapıştır. Kaydettiğinizde bir sonraki 06:
 | `drive` | `2WD` / `4WD` (boş = tümü) |
 | `minGapPct` | Piyasa farkı alt sınırı (%) |
 | `topN` | Bu profilde mesaja girecek araç sayısı (1–10) |
+| `includeAuctions` | `true` → müzayede lotları da bu profile dahil edilir |
+| `auctionTopN` | Müzayede bölümünde gösterilecek lot sayısı (varsayılan 2) |
+| `channels` | `["telegram"]`, `["textmeflow"]`, `["telegram","textmeflow"]`. Boş = tüm kanallar |
 
 > Eşleşme, tüm ilanlar üzerinden yapılır (sadece “en iyi 12” içinden değil); mesajda en yüksek skorlu
 > `topN` araç gösterilir. Profil boşsa mesajda “uygun ilan yok” yazar.
 
 `alerts.json` tanımlıysa `notify.json` içindeki `maxPriceGbp`/`models` alanları kullanılmaz;
 `notify.json` yalnızca başlık, kapanış ve yedek mod için kalır.
+
+### Kanal bazlı alert
+
+Her profile ayrı kanal atanabilir; atanmazsa tüm kanallara gider:
+
+```json
+{
+  "name": "Hilux · müzayede",
+  "models": ["hilux"],
+  "maxPriceGbp": 30000,
+  "includeAuctions": true,
+  "channels": ["telegram"]
+}
+```
+
+Mesaj örneği (müzayede lotu eklenmiş profil):
+
+```
+🎯 RAV4 · 25 bin £ altı  (≤£25.000 · ≤80.000 km · 2022+ · piyasa ≥%5)
+1) Toyota RAV4 · 2024/03 · 46.446 km
+   £22.676 gümrüklü · piyasa −%30,9
+   https://www.sbtjapan.com/...
+   🔨 Müzayede lotları (başlangıç fiyatı):
+   • Toyota RAV4 · 2024 · 76.000 km · en az £21.874
+```
+
+---
+
+## Fiyat trendi
+
+Her gün medyan gümrüklü fiyat kaydedilir ve `/trend.html` sayfasında model başına
+mini grafik olarak gösterilir (en düşük fiyat + uygun ilan sayısı ile birlikte).
+Veri `public/data/history.json` dosyasına yazılır; gün sayısı arttıkça çizgi uzar.
 
 ---
 
